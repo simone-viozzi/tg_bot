@@ -1,0 +1,75 @@
+  
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""Simple Bot to reply to Telegram messages.
+This is built on the API wrapper, see echobot2.py to see the same example built
+on the telegram.ext bot framework.
+This program is dedicated to the public domain under the CC0 license.
+"""
+import logging
+import telegram
+from telegram.error import NetworkError, Unauthorized
+from time import sleep
+import threading
+import saver
+import os
+
+
+class tg_bot:
+	update_id = None
+	users_obj = []
+	users = []
+	s = None
+	
+	def __init__(self):
+		with open('.token', 'r') as file:
+			TOKEN = file.read().replace('\n', '')
+		
+		self.bot = telegram.Bot(TOKEN)
+
+		try:
+			self.update_id = self.bot.get_updates()[0].update_id
+		except IndexError:
+			self.update_id = None
+
+		t = threading.Thread(target=self.get_users, args=(self.bot,))
+		t.start()
+		
+		dir_path = os.path.dirname(os.path.realpath(__file__))
+
+		self.s = saver.saver(dir_path + "/tgUsers")
+
+		[i, tgUsers] = self.s.load()
+		if (i == -1):
+			print("no users saved")
+		else:
+			self.users_obj = tgUsers
+			
+
+	def get_users(self, bot):
+		"""thread worker function"""
+		print('Worker')
+		while(1):
+			try:
+				for u in bot.get_updates(offset=self.update_id, timeout=10):
+					if u.message.chat.username not in self.users:
+						self.users_obj.append(u.effective_user)
+						u.effective_user.send_message("benvenuto")
+						self.users.append(u.message.chat.username)
+						self.update_id = u.update_id + 1
+						print("new user, current users: " + ', '.join(map(str, self.users)))
+						self.s.save(self.users_obj)
+			except:
+				sleep(1)
+				print("errrrror")
+	
+
+	def echo(self, msg):
+		"""Echo the message the user sent."""
+		# Request updates after the last update_id
+		for u in self.users_obj:
+			u.send_message(msg)
+		
+
+
+
