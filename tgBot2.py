@@ -18,11 +18,10 @@ import os
 class tg_bot:
 	update_id = None
 	users_obj = []
-	users = []
 	s = None
 	
 	def __init__(self):
-		with open('.token', 'r') as file:
+		with open('token', 'r') as file:
 			TOKEN = file.read().replace('\n', '')
 		
 		self.bot = telegram.Bot(TOKEN)
@@ -51,25 +50,37 @@ class tg_bot:
 		print('Worker')
 		while(1):
 			try:
+				users = []
+				for usr in self.users_obj:
+					users.append(usr.username)
 				for u in bot.get_updates(offset=self.update_id, timeout=10):
-					if u.message.chat.username not in self.users:
+					if u.message.chat.username not in users:
 						self.users_obj.append(u.effective_user)
 						u.effective_user.send_message("benvenuto")
-						self.users.append(u.message.chat.username)
+						users.append(u.message.chat.username)
 						self.update_id = u.update_id + 1
-						print("new user, current users: " + ', '.join(map(str, self.users)))
+						print("new user, current users: " + ', '.join(map(str, users)))
 						self.s.save(self.users_obj)
-			except:
+			except Exception as e: 
+				print(e)
 				sleep(1)
-				print("errrrror")
 	
 
 	def echo(self, msg):
 		"""Echo the message the user sent."""
 		# Request updates after the last update_id
 		for u in self.users_obj:
-			u.send_message(msg)
-		
+			try:
+				u.send_message(msg)
+			except:
+				try:
+					print("problem by user: " + u.username)
+				except:
+					print("problem by user: " + str(u))
+				self.users_obj.remove(u)
+				self.s.save(self.users_obj)
+				
+				
 
 
 
