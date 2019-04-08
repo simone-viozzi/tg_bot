@@ -39,7 +39,6 @@ while(1):
 			print("site doesn't changed")
 			print("going to sleep for " + str(round(rdn/60, 2)) + " minutes")
 			if (old_time > 3600):
-				b.echo()
 				b.echo("link: " + site + "\n\nsite doesn't changed in the last " + str(round(old_time/60, 2)) + " minutes")
 				old_time = 0
 			else:
