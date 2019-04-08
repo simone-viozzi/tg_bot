@@ -9,13 +9,13 @@ import tgBot2
 import os 
 import saver
 
+
+site = 'http://www.tlc.dii.univpm.it/blog/teaching/corsi-di-preparazione-per-la-certificazione-hcna'
 old_time = 0
 b = tgBot2.tg_bot()
 while(1):
 	try:
-		request = urllib.request.Request('http://www.tlc.dii.univpm.it/blog/teaching/corsi-di-preparazione-per-la-certificazione-hcna')
-
-		#request = urllib.request.Request('https://stackoverflow.com/')
+		request = urllib.request.Request(site)
 
 		response = urllib.request.urlopen(request) # Make the request
 		# Grab everything before the dynabic double-click link
@@ -39,18 +39,22 @@ while(1):
 			print("site doesn't changed")
 			print("going to sleep for " + str(round(rdn/60, 2)) + " minutes")
 			if (old_time > 3600):
-				b.echo("site doesn't changed in the last " + str(round(old_time/60, 2)) + " minutes")
+				b.echo()
+				b.echo("link: " + site + "\n\nsite doesn't changed in the last " + str(round(old_time/60, 2)) + " minutes")
 				old_time = 0
 			else:
 				old_time = old_time + rdn
 			print("old_time: " + str(old_time))
+			print("link rapido: " + site)
 			b.printCurrentUsers()
 			time.sleep(rdn)
 		elif (htmlString_old != htmlString):
 			s.save(htmlString)
 			for i in range(50):
 				print("site changed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+				print("link rapido: " + site)
 				b.echo("site changed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+				b.echo("link: " + site)
 				time.sleep(5)
 		else:
 			print("something goes truly wrong")
