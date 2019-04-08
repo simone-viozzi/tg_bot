@@ -9,6 +9,7 @@ import tgBot2
 import os 
 import saver
 
+old_time = 0
 b = tgBot2.tg_bot()
 while(1):
 	try:
@@ -33,21 +34,27 @@ while(1):
 			s.save(htmlString)
 			print("first run")
 			b.echo("first run")
-		else:
-			if (htmlString_old == htmlString):
-				print("site doesn't changed")
-				b.echo("site doesn't changed")
+		elif (htmlString_old == htmlString):
+			rdn = random.randint(60,300)
+			print("site doesn't changed")
+			print("going to sleep for " + str(round(rdn/60, 2)) + " minutes")
+			if (old_time > 3600):
+				b.echo("site doesn't changed in the last " + str(round(old_time/60, 2)) + " minutes")
+				old_time = 0
 			else:
-				s.save(htmlString)
-				for i in range(50):
-					print("site changed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-					b.echo("site changed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-					time.sleep(5)
-		rdn = random.randint(60,300)
-		print("going to sleep for " + str(round(rdn/60, 2)) + " minutes")
-		b.echo("going to sleep for " + str(round(rdn/60, 2)) + " minutes")
-		b.printCurrentUsers()
-		time.sleep(rdn)
+				old_time = old_time + rdn
+			print("old_time: " + str(old_time))
+			b.printCurrentUsers()
+			time.sleep(rdn)
+		elif (htmlString_old != htmlString):
+			s.save(htmlString)
+			for i in range(50):
+				print("site changed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+				b.echo("site changed!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+				time.sleep(5)
+		else:
+			print("something goes truly wrong")
+			b.echo("something goes truly wrong")
 	except urllib.request.URLError:
 		print("connection error!!!")		
 		time.sleep(1)

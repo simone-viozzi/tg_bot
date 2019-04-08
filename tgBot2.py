@@ -45,7 +45,7 @@ class tg_bot:
 			self.users_obj = tgUsers
 			
 	def printCurrentUsers(self):
-		print("current users: \n{\n\t" + '\n\t '.join(map(str, self.users_obj)) + "\n}")
+		print("current users: \n{\n\t" + '\n\t'.join(map(str, self.users_obj)) + "\n}")
 
 	def get_users(self, bot):
 		"""thread worker function"""
