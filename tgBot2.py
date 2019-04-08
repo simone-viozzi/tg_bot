@@ -44,23 +44,25 @@ class tg_bot:
 		else:
 			self.users_obj = tgUsers
 			
+	def printCurrentUsers(self):
+		print("current users: \n{\n\t" + '\n\t '.join(map(str, self.users_obj)) + "\n}")
 
 	def get_users(self, bot):
 		"""thread worker function"""
 		print('Worker')
 		while(1):
 			try:
-				users = []
-				for usr in self.users_obj:
-					users.append(usr.username)
 				for u in bot.get_updates(offset=self.update_id, timeout=10):
-					if u.message.chat.username not in users:
+					ids = []
+					for usr in self.users_obj:
+						ids.append(usr.id)
+					if u.effective_user.id not in ids:
 						self.users_obj.append(u.effective_user)
 						u.effective_user.send_message("benvenuto")
-						users.append(u.message.chat.username)
 						self.update_id = u.update_id + 1
-						print("new user, current users: " + ', '.join(map(str, users)))
+						print("new user")
 						self.s.save(self.users_obj)
+						self.printCurrentUsers()
 			except Exception as e: 
 				print(e)
 				sleep(1)
@@ -79,6 +81,7 @@ class tg_bot:
 					print("problem by user: " + str(u))
 				self.users_obj.remove(u)
 				self.s.save(self.users_obj)
+		
 				
 				
 

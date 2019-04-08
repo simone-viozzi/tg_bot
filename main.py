@@ -47,10 +47,10 @@ while(1):
 		rdn = random.randint(60,300)
 		print("going to sleep for " + str(round(rdn/60, 2)) + " minutes")
 		b.echo("going to sleep for " + str(round(rdn/60, 2)) + " minutes")
+		b.printCurrentUsers()
 		time.sleep(rdn)
 	except urllib.request.URLError:
-		print("connection error!!!")
-		b.echo("bot connection error!!!")		
+		print("connection error!!!")		
 		time.sleep(1)
 
 
