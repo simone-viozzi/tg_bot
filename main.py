@@ -21,9 +21,8 @@ while(1):
 		htmlString = response.read().decode('utf-8')
 
 		soup = BeautifulSoup(htmlString, features='lxml')
-		l = soup.find('body').find_all('div')
+		l = soup.find('body').find_all("div", id="main")
 		htmlString = '\n'.join([str(ele) for ele in l])
-		
 		
 		dir_path = os.path.dirname(os.path.realpath(__file__))
 
