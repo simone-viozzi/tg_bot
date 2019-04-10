@@ -19,6 +19,7 @@ class tg_bot:
 	update_id = None
 	users_obj = []
 	s = None
+	usr_problems = {}
 	
 	def __init__(self):
 		with open('token', 'r') as file:
@@ -43,6 +44,8 @@ class tg_bot:
 			print("no users saved")
 		else:
 			self.users_obj = tgUsers
+			for u in self.users_obj:
+				self.usr_problems[str(u.id)] = 0
 			
 	def printCurrentUsers(self):
 		print("current users: \n{\n\t" + '\n\t'.join(map(str, self.users_obj)) + "\n}")
@@ -61,6 +64,7 @@ class tg_bot:
 						u.effective_user.send_message("benvenuto")
 						self.update_id = u.update_id + 1
 						print("new user")
+						self.usr_problems[str(u.effective_user.id)] = 0
 						self.s.save(self.users_obj)
 						self.printCurrentUsers()
 			except Exception as e: 
@@ -72,15 +76,26 @@ class tg_bot:
 		"""Echo the message the user sent."""
 		# Request updates after the last update_id
 		for u in self.users_obj:
-			try:
-				u.send_message(msg)
-			except:
+			flag = True
+			while (flag):
 				try:
-					print("problem by user: " + u.username)
+					u.send_message(msg)
+					print("msg for " + str(u) + " sent")
+					flag = False
+				except Unauthorized:
+					flag = False
+					self.usr_problems[str(u.id)] += 1
+					try:
+						print("problem by user: " + u.username)
+					except:
+						print("problem by user: " + str(u))
+					if (self.usr_problems[str(u.id)] > 3):
+						self.users_obj.remove(u)
+						self.s.save(self.users_obj)
 				except:
-					print("problem by user: " + str(u))
-				self.users_obj.remove(u)
-				self.s.save(self.users_obj)
+					print("connection to the user " + str(u))
+					print("retrying...")
+					flag = True
 		
 				
 				
