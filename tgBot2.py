@@ -56,7 +56,7 @@ class tg_bot:
 		print('Worker')
 		while(1):
 			try:
-				for u in bot.get_updates(offset=self.update_id, timeout=10):
+				for u in bot.get_updates(offset=self.update_id, timeout=30):
 					ids = []
 					for usr in self.users_obj:
 						ids.append(usr.id)
@@ -69,7 +69,7 @@ class tg_bot:
 						self.s.save(self.users_obj)
 						self.printCurrentUsers()
 			except Exception as e: 
-				print(e)
+				#print(e)
 				sleep(1)
 	
 

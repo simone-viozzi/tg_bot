@@ -22,8 +22,8 @@ while(1):
 			response = urllib.request.urlopen(request) # Make the request
 		except:
 			print("connessione al sito fallita!!!!")
-			if (cont_failed > 10):
-				b.echo("connessione al sito fallita per le scorse 10 vote!!!!\n\n" + "link: " + site + "\n" 
+			if (cont_failed > 100):
+				b.echo("connessione al sito fallita per le scorse 100 vote!!!!\n\n" + "link: " + site + "\n" 
 						+"paypal link for donation http://paypal.me/simo97")
 				cont_failed = 0
 			else:
