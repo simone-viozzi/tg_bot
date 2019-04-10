@@ -43,6 +43,7 @@ class tg_bot:
 			print("no users saved")
 		else:
 			self.users_obj = tgUsers
+			self.printCurrentUsers()
 			
 	def printCurrentUsers(self):
 		print("current users: \n{\n\t" + '\n\t'.join(map(str, self.users_obj)) + "\n}")
