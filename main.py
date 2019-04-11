@@ -50,7 +50,7 @@ while(1):
 			rdn = random.randint(60,300)
 			print("site doesn't changed")
 			print("going to sleep for " + str(round(rdn/60, 2)) + " minutes")
-			if (old_time > 600):
+			if (old_time > 6000):
 				b.echo("site doesn't changed in the last " + str(round(old_time/60, 2)) 
 					+ " minutes\n\n" + "link: " + site + "\n" 
 					+"paypal link for donation http://paypal.me/simo97")
